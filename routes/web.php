@@ -21,18 +21,27 @@ use App\Http\Controllers\Admin\PenjualanController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::prefix('admin')
     ->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resources([
-        'kategori' => KategoriController::class,
-        'satuan' => SatuanController::class,
-        'suplaier' => SuplaierController::class,
-        'obat' => ObatController::class,
-        'obatmasuk' => ObatMasukController::class,
-        'penjualan' => PenjualanController::class,
-    ]);
-});
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth', 'checkRole:admin');
+    Route::group(['middleware' => ['auth', 'checkRole:admin']], function() {
+        Route::get('/cetakObatMasukForm', [ObatMasukController::class, 'cetakForm'])->name('cetakForm');
+        Route::get('/cetakDataPertanggal/{tglawal}/{tglakhir}', [ObatMasukController::class, 'cetakObatMasukPertanggal'])->name('cetakDataPertanggal');
+        Route::resources([
+            'kategori' => KategoriController::class,
+            'satuan' => SatuanController::class,
+            'suplaier' => SuplaierController::class,
+            'obat' => ObatController::class,
+            'obatmasuk' => ObatMasukController::class,
+            ]);
+        });
+    });
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth', 'checkRole:kasir');
+    Route::resource('penjualan', PenjualanController::class)->middleware('auth', 'checkRole:kasir');
+
+Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

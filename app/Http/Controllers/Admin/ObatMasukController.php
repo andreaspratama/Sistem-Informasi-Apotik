@@ -9,6 +9,7 @@ use App\Models\Obat;
 use App\Models\Satuan;
 use App\Models\Suplaier;
 use Carbon\Carbon;
+use PDF;
 use Illuminate\Http\Request;
 
 class ObatMasukController extends Controller
@@ -133,5 +134,19 @@ class ObatMasukController extends Controller
         $item->delete();
 
         return redirect()->route('obatmasuk.index');
+    }
+
+    public function cetakForm()
+    {
+        return view('pages.admin.obatmasuk.cetakMasukForm');
+    }
+
+    public function cetakObatMasukPertanggal($tglawal, $tglakhir)
+    {
+        // dd(["Tanggal Awal : ".$tglawal, "Tanggal Akhir : ".$tglakhir]);
+        $cetakitem = ObatMasuk::with(['satuan', 'suplaier', 'obat'])->whereBetween('tanggal', [$tglawal, $tglakhir])->get();
+        
+        $pdf = PDF::loadview('export.obatmasukpertanggalpdf', compact('cetakitem'));
+        return $pdf->download('laporan-obat-masuk.pdf');
     }
 }
