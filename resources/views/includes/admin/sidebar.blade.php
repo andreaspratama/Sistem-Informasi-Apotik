@@ -3,21 +3,30 @@
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-      <div class="sidebar-brand-icon rotate-n-15">
-        <i class="fas fa-laugh-wink"></i>
+      <div class="sidebar-brand-icon">
+        <i class="fas fa-store-alt"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+      <div class="sidebar-brand-text mx-3">Apotikmu</div>
     </a>
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-      <a class="nav-link" href="{{route('dashboard')}}">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard</span></a>
-    </li>
+    @if (auth()->user()->role === 'admin')
+      <li class="nav-item active">
+        <a class="nav-link" href="{{route('dashboardAdmin')}}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+      </li>
+    @endif
+    @if (auth()->user()->role === 'kasir')
+      <li class="nav-item active">
+        <a class="nav-link" href="{{route('dashboardKasir')}}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+      </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -55,6 +64,18 @@
             <a class="collapse-item" href="{{route('obat.index')}}">Obat</a>
             <a class="collapse-item" href="{{route('obatmasuk.index')}}">Obat Masuk</a>
             <a class="collapse-item" href="{{route('cetakForm')}}">Cetak Obat Masuk</a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#penjualan" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas fa-dollar-sign"></i>
+          <span>Data Penjualan</span>
+        </a>
+        <div id="penjualan" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="{{route('penjAdmin.index')}}">Penjualan</a>
+            <a class="collapse-item" href="{{route('cetakFormPenjualan')}}">Cetak Penjualan</a>
           </div>
         </div>
       </li>
